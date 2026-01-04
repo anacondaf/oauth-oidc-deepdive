@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src='https://www.paypalobjects.com/js/external/api.js'></script>
+	<script src="https://www.paypalobjects.com/payouts/js/payouts_aac.js"></script>
+</head>
+
+<body>
+	<h2>JS SDK</h2>
+	<br />
+	<div id='loginBtn'></div>
+	<script>
+		paypal.use(['login'], function (login) {
+			login.render({
+				"appid": "AfYM6PAFXXXye0u4jgdOlynUkuJNzsJYXtshXoQlDHhXjtP-OgwrRV-NUjJPxqX-Ea2ABPk10i3GIngM",
+				"authend": "sandbox",
+				"scopes": "openid profile email address https://uri.paypal.com/services/paypalattributes",
+				"containerid": "loginBtn",
+				"responseType": "code",
+				"locale": "en-us",
+				"labelType": "LWP",
+				"buttonSize": "lg",
+				"fullPage": "false",
+				"returnurl": "https://example.com",
+				"theme": "blue"
+			});
+
+			console.log(login);
+		});
+	</script>
+
+	<!-- Set up a container for ACC to be rendered into -->
+	<h2>Zoid</h2>
+	<br />
+	<div id="container"></div>
+	<script>
+	
+		<!-- // Listen for messages from the popup (for cross-origin scenarios) -->
+		<!-- window.addEventListener('message', function(event) { -->
+			<!-- // For security, verify the origin matches your redirect URI domain -->
+			<!-- // event.origin should match your expected domain -->
+			<!-- console.log('received message'); -->
+			<!-- console.log('Message received from:', event.origin, 'Data:', event.data); -->
+			
+			<!-- <!-- if (event.data && event.data.code) { --> -->
+				<!-- <!-- handleAuthorizationCode(event.data.code); --> -->
+				
+				<!-- <!-- // Try to close the popup if it's still open --> -->
+				<!-- <!-- if (currentPopup && !currentPopup.closed) { --> -->
+					<!-- <!-- currentPopup.close(); --> -->
+				<!-- <!-- } --> -->
+			<!-- <!-- } --> -->
+			
+			<!-- // Try to close the popup if it's still open -->
+			<!-- if (currentPopup && !currentPopup.closed) { -->
+				<!-- currentPopup.close(); -->
+			<!-- } -->
+			
+			<!-- // Behaviour like the JS SDK -->
+			<!-- window.location.href = "http://example.com"; -->
+		<!-- }); -->
+	
+		// Render the AAC component
+		paypal.PayoutsAAC.render({
+			// Use sandbox for testing
+			env: "sandbox",
+			clientId: {
+				sandbox: "AfYM6PAFXXXye0u4jgdOlynUkuJNzsJYXtshXoQlDHhXjtP-OgwrRV-NUjJPxqX-Ea2ABPk10i3GIngM"
+			},
+			merchantId: "ST9US6Q5XW2KN",
+			pageType: "login",
+			onLogin: function (response) {
+				if (response.err) {
+					console.log(response.err)
+				} else {
+					console.log(response.body);
+				}
+			},
+			style: {
+				color: "blue",
+				layout: "horizontal",
+				shape: "pill"
+			}
+		}, '#container');
+	</script>
+	
+	
+	
+	<!-- Set up custom solution -->
+	<h2>Custom solution</h2>
+	<br />
+	<button id="custom-auth">Login with PayPal</button>
+	
+	<script>
+		var button = document.getElementById("custom-auth");
+		var paypalAuthorizationRequestUrl 
+			= "https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=ARNZvsRRRdTvBAdlx-gdQ5xE-5scnNB-AJgDcL_YTe7UjAhM3vofXMu10wVxkxJiPawQ1bADBn1q2Z9n&response_type=code&scope=openid profile email address&redirect_uri=http://pxp-payout-redirect.com";
+		
+		var features = 'width=${width},height=${height},left=${left},top=${top},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes';
+		
+		var popup;
+		
+		button.addEventListener('click', (e) => {
+			popup = window.open(paypalAuthorizationRequestUrl, 'PayPalLogin', features);
+		});
+		
+		window.addEventListener('message', (e) => {
+			console.log(e);
+			
+			popup.close();
+		});
+	
+	</script>
+	
+	
+</body>
+
+</html>
